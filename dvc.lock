@@ -1,0 +1,24 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python train.py
+    deps:
+    - path: data/images
+      hash: md5
+      md5: e8ffe2529ec708a91af59b934782390c.dir
+      size: 2770215559
+      nfiles: 10015
+    - path: data/labels.csv
+      hash: md5
+      md5: 8f85fb1aa29d80a2797247e434deb79d
+      size: 690218
+    - path: train.py
+      hash: md5
+      md5: 2972e576eaedfa2e5012a9e90acce961
+      size: 2998
+    outs:
+    - path: checkpoints
+      hash: md5
+      md5: cf99a533d75fff359c596c495a32d8f0.dir
+      size: 134291110
+      nfiles: 3

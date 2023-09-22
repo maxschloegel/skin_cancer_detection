@@ -1,0 +1,9 @@
+stages:
+  train:
+    cmd: python train.py
+    deps:
+    - data/images
+    - data/labels.csv
+    - train.py
+    outs:
+    - checkpoints
