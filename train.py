@@ -40,6 +40,7 @@ class ImageClassifier(pl.LightningModule):
         outputs = self(inputs)
         loss = nn.CrossEntropyLoss()(outputs, labels)
         self.log('step', self.trainer.current_epoch)
+        self.log('step', self.trainer.current_epoch)
         self.log('train_loss', loss, on_step=False, on_epoch=True)
         return loss
 
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     hparams = {
         'batch_size': 32,
         'learning_rate': 0.001,
-        'epochs': 15,
+        'epochs': 5,
         'class_labels': ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc'],
         'val_split': 0.2,
         'seed': 42,
