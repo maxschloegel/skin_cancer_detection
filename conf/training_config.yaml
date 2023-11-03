@@ -1,0 +1,7 @@
+hparams:
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 5
+  class_labels: ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc']
+  val_split: 0.2
+  seed: 42
