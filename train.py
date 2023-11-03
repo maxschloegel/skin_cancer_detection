@@ -55,7 +55,7 @@ class ImageClassifier(pl.LightningModule):
         self.log('val_acc', acc, on_step=False, on_epoch=True)
 
 
-@hydra.main(config_path="conf", config_name="training_config")
+@hydra.main(version_base=None, config_path="conf", config_name="training_config")
 def run(cfg: DictConfig):
     hparams = cfg["hparams"]
     root_dir = pathlib.Path(get_original_cwd())
@@ -81,10 +81,9 @@ def run(cfg: DictConfig):
     mlflow.set_tracking_uri(tracking_uri)
     mlf_logger = MLFlowLogger(
         experiment_name="testing_model_registry_new",
-        #tracking_uri='file:./ml-runs',
         tracking_uri=tracking_uri,
         log_model=True,
-        artifact_location=str(root_dir / 'mlruns')
+        artifact_location="./mlruns"
         )
 
     model = ImageClassifier(hparams)
