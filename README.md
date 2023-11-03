@@ -78,8 +78,8 @@ The following features and additionas will come soon. For each:
 - [x] Create Github repository with first commit
 - [x] Enable training parameter settings with config-file or hydra.
 - [ ] Implement Tests + CI/CD
-  - [ ] Write tests
-  - [ ] Create CI with github-actions (pytest and flake8)
+  - [x] Create CI with github-actions (pytest and flake8)
+  - [ ] Write actual tests
 - [ ] Use [DVC](https://dvc.org/) for data version control of training data
   - [ ] First set it up locally
   - [ ] Make it flexible enough to be switch to AWS S3 later on
