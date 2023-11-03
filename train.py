@@ -1,7 +1,10 @@
 import os
 import pathlib
 
+import hydra
+from hydra.utils import get_original_cwd
 import mlflow
+from omegaconf import DictConfig, OmegaConf
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import MLFlowLogger
 import torch
@@ -9,10 +12,8 @@ import torch.nn as nn
 from torchvision import models, transforms
 from torch.utils.data import DataLoader
 
-
 from custom_dataset import CustomImageDataset
 from utils import train_val_split
-
 
 
 class ImageClassifier(pl.LightningModule):
@@ -40,7 +41,6 @@ class ImageClassifier(pl.LightningModule):
         outputs = self(inputs)
         loss = nn.CrossEntropyLoss()(outputs, labels)
         self.log('step', self.trainer.current_epoch)
-        self.log('step', self.trainer.current_epoch)
         self.log('train_loss', loss, on_step=False, on_epoch=True)
         return loss
 
@@ -54,17 +54,12 @@ class ImageClassifier(pl.LightningModule):
         self.log('val_loss', loss, on_step=False, on_epoch=True)
         self.log('val_acc', acc, on_step=False, on_epoch=True)
 
-if __name__ == '__main__':
-    hparams = {
-        'batch_size': 32,
-        'learning_rate': 0.001,
-        'epochs': 5,
-        'class_labels': ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc'],
-        'val_split': 0.2,
-        'seed': 42,
-    }
 
-    data_root = pathlib.Path("data")
+@hydra.main(config_path="conf", config_name="training_config")
+def run(cfg: DictConfig):
+    hparams = cfg["hparams"]
+    root_dir = pathlib.Path(get_original_cwd())
+    data_root = root_dir / "data"
     data_dir = data_root / 'images'
     csv_file = data_root / 'labels.csv'
 
@@ -82,14 +77,14 @@ if __name__ == '__main__':
     val_loader = DataLoader(val_dataset, batch_size=hparams['batch_size'])
 
 
-    tracking_uri = 'sqlite:///mydb.sqlite'
+    tracking_uri = 'sqlite:///' + str(root_dir / 'mydb.sqlite')
     mlflow.set_tracking_uri(tracking_uri)
     mlf_logger = MLFlowLogger(
         experiment_name="testing_model_registry_new",
         #tracking_uri='file:./ml-runs',
         tracking_uri=tracking_uri,
         log_model=True,
-        artifact_location='mlruns'
+        artifact_location=str(root_dir / 'mlruns')
         )
 
     model = ImageClassifier(hparams)
@@ -105,3 +100,7 @@ if __name__ == '__main__':
     best_model = ImageClassifier.load_from_checkpoint(checkpoint_path=best_model_path)
     mlflow.pytorch.log_model(model, "final_model.pt")
     mlflow.pytorch.log_model(best_model, "best_model.pt")
+
+
+if __name__ == '__main__':
+    run()

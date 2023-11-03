@@ -75,17 +75,17 @@ Here we will describe in detail how to set up an online MLflow Tracking Server a
 The following features and additionas will come soon. For each:
 - Keep README up to date for each of the To-Dos
 
-- [ ] Create Github repository with first commit
-- [ ] Enable training parameter settings with config-file or hydra.
+- [x] Create Github repository with first commit
+- [x] Enable training parameter settings with config-file or hydra.
+- [ ] Implement Tests + CI/CD
+  - [ ] Write tests
+  - [ ] Create CI with github-actions (pytest and flake8)
 - [ ] Use [DVC](https://dvc.org/) for data version control of training data
   - [ ] First set it up locally
   - [ ] Make it flexible enough to be switch to AWS S3 later on
 - [ ] Set up CT (continuous training)
   - [ ] Create github runner with GPU (firts locally then later with AWS using [`CML`](https://cml.dev/))
-  - [ ] Create github-actions
-- [ ] Implement Tests + CI/CD
-  - [ ] Write tests
-  - [ ] Add CI to github-actions
+  - [ ] Add training to github-actions
 - [ ] Refactor training script:
   - [ ] Create own model.py-file for lightning model
   - [ ] Outsource all configs to external config-file
