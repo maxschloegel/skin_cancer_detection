@@ -5,3 +5,5 @@ hparams:
   class_labels: ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc']
   val_split: 0.2
   seed: 42
+  num_workers: 10
+  shuffle: True

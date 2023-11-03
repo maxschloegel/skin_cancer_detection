@@ -1,8 +1,10 @@
 /lightning_logs
 /checkpoints
+/outputs
 *.sqlite
 /mlruns
 data/*
+
 
 
 
