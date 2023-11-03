@@ -75,7 +75,7 @@ Here we will describe in detail how to set up an online MLflow Tracking Server a
 The following features and additionas will come soon. For each:
 - Keep README up to date for each of the To-Dos
 
-- [ ] Create Github repository with first commit
+- [x] Create Github repository with first commit
 - [ ] Enable training parameter settings with config-file or hydra.
 - [ ] Use [DVC](https://dvc.org/) for data version control of training data
   - [ ] First set it up locally
