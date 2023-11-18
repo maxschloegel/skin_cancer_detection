@@ -54,7 +54,7 @@ class ImageClassifier(pl.LightningModule):
 
 
 @hydra.main(version_base=None,
-            config_path="../conf",
+            config_path="../../conf",
             config_name="training_config")
 def run(cfg: DictConfig):
     hparams = cfg["hparams"]

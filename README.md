@@ -79,6 +79,7 @@ The following features and additionas will come soon. For each:
 - [x] Enable training parameter settings with config-file or hydra.
 - [ ] Implement Tests + CI/CD
   - [x] Create CI with github-actions (pytest and flake8)
+  - [x] Initialize Code as Python Package
   - [ ] Write actual tests
 - [ ] Use [DVC](https://dvc.org/) for data version control of training data
   - [ ] First set it up locally
