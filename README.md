@@ -90,9 +90,10 @@ The following features and additionas will come soon. For each:
 - [ ] Refactor training script:
   - [ ] Create own model.py-file for lightning model
   - [ ] Outsource all configs to external config-file
-- [ ] Deploy model with RestAPI endpoint via AWS
-  - [ ] Either FastAPI or MLflow's own deployment method
-- [ ] Use [`Evidently`](https://www.evidentlyai.com/) for performance tracking
 - [ ] Deploy MLflow tracking server via AWS
+- [ ] Deploy model with RestAPI endpoint via AWS
+  - [ ] Deploy local FastAPI using local mlflow model registry
+  - [ ] Either FastAPI or MLflow's own deployment method (needs MLflow model registry on AWS)
+- [ ] Use [`Evidently`](https://www.evidentlyai.com/) for performance tracking
 - [ ] Set up cost monitoring of AWS instances
 - [ ] Understand `checkpoint`-directory
