@@ -1,9 +1,25 @@
 hparams:
-  batch_size: 32
-  learning_rate: 0.001
-  epochs: 5
-  class_labels: ['akiec', 'bcc', 'bkl', 'df', 'mel', 'nv', 'vasc']
-  val_split: 0.2
-  seed: 42
-  num_workers: 10
-  shuffle: True
+  training:
+    batch_size: 32
+    learning_rate: 0.0001
+    epochs: 2
+    val_split: 0.2
+    seed: 42
+    num_workers: 10
+    shuffle: True
+  data:
+    image_column: "image_id"
+    label_column: "dx"
+    class_labels: ["akiec", "bcc", "bkl", "df", "mel", "nv", "vasc"]
+    class_strings: ["Brown's Disease",
+                    "Basal Cell Carcinoma",
+                    "Benign Keratosis-like Lesions",
+                    "Dermatofibroma",
+                    "Melanoma",
+                    "Melanocytic Nevi",
+                    "Vascular Lesions"]
+
+mlflow_logger:
+  experiment_name: "scd_default_model"
+  artifact_location: "./mlruns"
+  log_model: True

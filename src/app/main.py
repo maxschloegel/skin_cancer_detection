@@ -43,7 +43,7 @@ async def model_inference(file: UploadFile = File(...)):
     predictions = model(im_t[None, :, :, :])
 
     result, certainty = get_label_for_prediction(predictions,
-                                                 model.hparams["class_strings"])  # noqa: E501
+                                                 model.hparams["data"]["class_strings"])  # noqa: E501
 
     return InferenceOutput(result=result, certainty=certainty)
 

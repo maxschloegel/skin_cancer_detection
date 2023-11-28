@@ -29,8 +29,8 @@ def run(cfg: DictConfig):
     logger_cfg = cfg["mlflow_logger"]
     root_dir = pathlib.Path(get_original_cwd())
     data_root = root_dir / "data"
-    data_dir = data_root / 'images'
-    csv_file = data_root / 'labels.csv'
+    data_dir = data_root / "images"
+    csv_file = data_root / "labels.csv"
 
     transform = nn.Sequential(
         transforms.Resize((224, 224), antialias=True),
@@ -38,19 +38,23 @@ def run(cfg: DictConfig):
                              std=[0.229, 0.224, 0.225]),
     )
 
-    dataset = CustomImageDataset(data_dir, csv_file, image_column="image_id",
-                                 label_column="dx", transform=transform)
+    dataset = CustomImageDataset(data_dir, csv_file, 
+                                 image_column=hparams.data["image_column"],
+                                 label_column=hparams.data["label_column"],
+                                 transform=transform)
 
     train_dataset, val_dataset = train_val_split(
                                     dataset,
-                                    val_split=hparams['val_split'],
-                                    seed=hparams['seed'])
+                                    val_split=hparams.training["val_split"],
+                                    seed=hparams.training["seed"])
 
-    train_loader = DataLoader(train_dataset, batch_size=hparams['batch_size'],
-                              num_workers=hparams['num_workers'],
-                              shuffle=hparams["shuffle"])
-    val_loader = DataLoader(val_dataset, batch_size=hparams['batch_size'],
-                            num_workers=hparams["num_workers"])
+    train_loader = DataLoader(train_dataset,
+                              batch_size=hparams.training["batch_size"],
+                              num_workers=hparams.training["num_workers"],
+                              shuffle=hparams.training["shuffle"])
+    val_loader = DataLoader(val_dataset,
+                            batch_size=hparams.training["batch_size"],
+                            num_workers=hparams.training["num_workers"])
 
     mlf_logger = MLFlowLogger(
         experiment_name=logger_cfg["experiment_name"],
@@ -62,7 +66,7 @@ def run(cfg: DictConfig):
     model = ImageClassifier(hparams)
 
     accelerator = "gpu" if torch.cuda.is_available() else "cpu"
-    trainer = pl.Trainer(max_epochs=hparams['epochs'],
+    trainer = pl.Trainer(max_epochs=hparams.training["epochs"],
                          accelerator=accelerator,
                          default_root_dir="checkpoints/",
                          logger=mlf_logger)
@@ -84,5 +88,5 @@ def run(cfg: DictConfig):
     mlflow.pytorch.log_model(tf_best_model, "best_model.pt")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()
