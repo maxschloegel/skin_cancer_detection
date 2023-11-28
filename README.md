@@ -69,6 +69,16 @@ In the UI you can look at the different training runs and register models to the
 
 Here we will describe in detail how to set up an online MLflow Tracking Server and connect it to an online available model registry.
 
+## FastAPI
+
+In the end the model will be deployed via FastAPI (see [`src/app/main.py`](https://github.com/maxschloegel/skin_cancer_detection/blob/main/src/app/main.py))
+To run the app you need to have `uvicorn` installed and run:
+
+```shell
+uvicorn src.app.main:app --reload
+```
+You can set the specific port by adding the argument `--port 8001`, see [uvicorn's website](https://www.uvicorn.org/settings/) for more information.
+
 
 ## Coming Soon
 
