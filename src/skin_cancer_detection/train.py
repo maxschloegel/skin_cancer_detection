@@ -1,6 +1,7 @@
 import os
 import pathlib
 
+from dotenv import load_dotenv
 import hydra
 from hydra.utils import get_original_cwd
 import mlflow
@@ -10,10 +11,14 @@ from pytorch_lightning.loggers import MLFlowLogger
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
+from torchvision.ops import sigmoid_focal_loss
 from torch.utils.data import DataLoader
 
 from custom_dataset import CustomImageDataset
 from utils import train_val_split
+
+
+load_dotenv()
 
 
 class ImageClassifier(pl.LightningModule):
@@ -21,7 +26,7 @@ class ImageClassifier(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters(hparams)
 
-        self.model = models.resnet18(pretrained=True)
+        self.model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
         num_ftrs = self.model.fc.in_features
         # Adjust output size for multiple classes
         self.model.fc = nn.Linear(num_ftrs, len(hparams['class_labels']))
@@ -38,7 +43,8 @@ class ImageClassifier(pl.LightningModule):
         inputs, labels = batch
         outputs = self(inputs)
         loss = nn.CrossEntropyLoss()(outputs, labels)
-        self.log('step', self.trainer.current_epoch)
+        #loss = sigmoid_focal_loss(outputs, labels)
+        self.log('step', float(self.trainer.current_epoch))
         self.log('train_loss', loss, on_step=False, on_epoch=True)
         return loss
 
@@ -46,9 +52,10 @@ class ImageClassifier(pl.LightningModule):
         inputs, labels = batch
         outputs = self(inputs)
         loss = nn.CrossEntropyLoss()(outputs, labels)
+        #loss = sigmoid_focal_loss(outputs, labels)
         preds = torch.argmax(outputs, dim=1)
         acc = torch.sum(preds == labels.data).item() / labels.size(0)
-        self.log('step', self.trainer.current_epoch)
+        self.log('step', float(self.trainer.current_epoch))
         self.log('val_loss', loss, on_step=False, on_epoch=True)
         self.log('val_acc', acc, on_step=False, on_epoch=True)
 
@@ -58,17 +65,17 @@ class ImageClassifier(pl.LightningModule):
             config_name="training_config")
 def run(cfg: DictConfig):
     hparams = cfg["hparams"]
+    logger_cfg = cfg["mlflow_logger"]
     root_dir = pathlib.Path(get_original_cwd())
     data_root = root_dir / "data"
     data_dir = data_root / 'images'
     csv_file = data_root / 'labels.csv'
 
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
+    transform = nn.Sequential(
+        transforms.Resize((224, 224), antialias=True),
         transforms.Normalize(mean=[0.485, 0.456, 0.406],
                              std=[0.229, 0.224, 0.225]),
-    ])
+    )
 
     dataset = CustomImageDataset(data_dir, csv_file, image_column="image_id",
                                  label_column="dx", transform=transform)
@@ -84,13 +91,13 @@ def run(cfg: DictConfig):
     val_loader = DataLoader(val_dataset, batch_size=hparams['batch_size'],
                             num_workers=hparams["num_workers"])
 
-    tracking_uri = 'sqlite:///' + str(root_dir / 'mydb.sqlite')
-    mlflow.set_tracking_uri(tracking_uri)
+    #tracking_uri = logger_cfg["tracking_uri"]
+    #mlflow.set_tracking_uri(tracking_uri)
     mlf_logger = MLFlowLogger(
-        experiment_name="testing_model_registry_new",
-        tracking_uri=tracking_uri,
-        log_model=True,
-        artifact_location="./mlruns"
+        experiment_name=logger_cfg["experiment_name"],
+        tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
+        log_model=logger_cfg["log_model"],
+        artifact_location=logger_cfg["artifact_location"]
         )
 
     model = ImageClassifier(hparams)
@@ -102,12 +109,22 @@ def run(cfg: DictConfig):
                          logger=mlf_logger)
     trainer.fit(model, train_loader, val_loader)
 
+
+
+    # Apparently the MLFlowLogger does not store the models automatically
+    # Maybe this has been fixed already
     os.environ["MLFLOW_RUN_ID"] = trainer.logger.run_id
     best_model_path = trainer.checkpoint_callback.best_model_path
     best_model = ImageClassifier.load_from_checkpoint(
                     checkpoint_path=best_model_path)
-    mlflow.pytorch.log_model(model, "final_model.pt")
-    mlflow.pytorch.log_model(best_model, "best_model.pt")
+
+    tf_model = nn.Sequential(transform,
+                             model)
+    tf_best_model = nn.Sequential(transform,
+                                  best_model)
+
+    mlflow.pytorch.log_model(tf_model, "final_model.pt")
+    mlflow.pytorch.log_model(tf_best_model, "best_model.pt")
 
 
 if __name__ == '__main__':

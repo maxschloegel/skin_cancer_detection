@@ -3,6 +3,8 @@ import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 
+from utils import apply_transforms
+
 
 class CustomImageDataset(Dataset):
     def __init__(self, data_dir, csv_file, image_column="lesion_id",
@@ -25,7 +27,7 @@ class CustomImageDataset(Dataset):
         label = self.label_to_int[self.data_info.loc[idx, self.label_column]]
 
         if self.transform:
-            image = self.transform(image)
+            image = apply_transforms(self.transform, image)
 
         return image, label
 

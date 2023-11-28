@@ -1,5 +1,14 @@
+import os
+from dotenv import load_dotenv
+from hydra import compose, initialize
+import mlflow
 import torch
+import torch.nn.functional as F
 from torch.utils.data import random_split
+from torchvision import transforms
+
+
+load_dotenv()
 
 
 def train_val_split(dataset, val_split=0.2, seed=None):
@@ -31,3 +40,34 @@ def train_val_split(dataset, val_split=0.2, seed=None):
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     return train_dataset, val_dataset
+
+
+def load_model(model_name="scd_model_prod", stage="Production"):
+    model_uri = f"models:/{model_name}/{stage}"
+    model = mlflow.pytorch.load_model(model_uri)
+    return model
+
+
+def get_label_for_prediction(predictions, class_strings):
+    prediction_softmax = F.softmax(predictions, dim=1)
+    idx = predictions.argmax().item()
+    return class_strings[idx], prediction_softmax[0][idx]
+
+
+def apply_transforms(transform, image):
+    """Applys ToTensor and the given transformations
+
+    Since we want to make the transformations scriptable, we need to take
+    `ToTensor()` out of the nn.Sequential(transformations). To have a
+    standardized way of applying transformations and not forgetting 
+    `ToTensor()` we will use this function for transformations.
+    """
+    tensor = transforms.ToTensor()(image)
+    tensor = transform(tensor)
+    return tensor
+
+
+#def load_config():
+#    with initialize(version_base=None, config_path="../../conf"):
+#        cfg = compose(config_name="training_config")
+#    return cfg
