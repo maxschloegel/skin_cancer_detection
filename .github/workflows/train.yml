@@ -27,4 +27,4 @@ jobs:
         run: |
           # Your ML workflow goes here
           python -m pip install .
-          python scr/skin_cancer_detection/train.py
+          python src/skin_cancer_detection/train.py
