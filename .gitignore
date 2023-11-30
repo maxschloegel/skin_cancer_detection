@@ -3,7 +3,7 @@
 /outputs
 *.sqlite
 /mlruns
-data/*
+data/images/*
 
 
 
