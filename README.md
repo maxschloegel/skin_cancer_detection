@@ -80,6 +80,28 @@ uvicorn src.app.main:app --reload
 You can set the specific port by adding the argument `--port 8001`, see [uvicorn's website](https://www.uvicorn.org/settings/) for more information.
 
 
+## Running Self-Hosted Runner
+
+CML allows you to run your own github-runner, i.e. if you need GPUs for computations but don't have access to AWS et al.
+On their [website](https://cml.dev/doc/self-hosted-runners) they explain in detail how to set that up. In short, you can use their docker image with every necessary package pre-installed `docker://iterativeai/cml:0-dvc2-base1-gpu`.
+This container has all the Python, CUDA, cml dependenies installed.
+Then you can start an interactive session via
+```shell
+docker run -it iterativeai/cml:0-dvc2-base1-gpu bash
+```
+to start the interactive session.
+In this session you then run
+```shell
+cml runner launch \
+  --repo="$REPOSITORY_URL" \
+  --token="$PERSONAL_ACCESS_TOKEN" \
+  --labels="cml-gpu" \
+  --idle-timeout="never"  # or "3min", "1h", etc..
+```
+Here:
+- `REPOSITORY_URL` is the url of the repository you need the GPU-runner for
+- `PERSONAL_ACCESS_TOKEN` is the PAT for that repository which allows you to create the runner
+
 ## Coming Soon
 
 The following features and additionas will come soon. For each:
