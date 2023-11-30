@@ -91,10 +91,13 @@ docker run -it iterativeai/cml:0-dvc2-base1-gpu bash
 ```
 To my experience it is important here to add `bash` at the end. I don't understand 100% why, but it seems that when restarting the container (after it has been stopped) `bash` keep the container from exiting immediatly. I assume that is because `bash` is waiting for input from the user and this keeps the container alive.
 When you want to use your GPU in the runner, you need to add this to the `run`-command. You need to make sure that docker is able to use the GPU first.
-See [here](https://stackoverflow.com/a/58432877) to install `nvidia-container-toolkit`. After restarting docker you then can enable GPUs with:
+See [here](https://stackoverflow.com/a/58432877) to install `nvidia-container-toolkit`. After restarting docker you then can enable GPUs. 
+In addition to GPU usage we also need access to a larger shared memory (shm). To deal with this issue, you can pass `--shm_size=8gb` (or less, 8gb seem to be plenty).
 ```shell
-docker run -it --gpus all iterativeai/cml:0-dvc2-base1-gpu bash
+docker run -it --gpus all --shm-size=8gb iterativeai/cml:0-dvc2-base1-gpu bash
 ```
+To see if the container has GPU access, run `nvidia-smi` inside the container.
+
 This container can be stopped and started again. If you want to access the containers bash, you need to start it in interactive mode:
 ```shell
 docker start -i <container_name>
