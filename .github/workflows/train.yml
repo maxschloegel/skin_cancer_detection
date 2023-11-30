@@ -30,6 +30,7 @@ jobs:
         run: |
           # Your ML workflow goes here
           # dvc pull data/images
-          # dvc pull data/labels.csv          
+          # dvc pull data/labels.csv
+          cp -r /home/runner/data/skin_cancer_detection/data/* data/
           python -m pip install .
           python src/skin_cancer_detection/train.py
