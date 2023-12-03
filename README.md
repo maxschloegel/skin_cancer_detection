@@ -1,6 +1,6 @@
 # DL for Skin Cancer Detection
 
-This repository contains the code to train a Neural Network to diagnose different pigment skin lesions into benign and malignentdifferentiate between benign and malign lesions.
+This repository contains the code to train a Neural Network to differentiate between benign and malign lesions.
 
 
 ## Overview
