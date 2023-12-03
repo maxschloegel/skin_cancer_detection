@@ -41,16 +41,16 @@ virtualenv venv --python=3.10
 Then install the dependencies:
 
 ```shell
-pip install -r requirements.txt
+pip install .
 ```
-
+> Note: [`poetry`](https://python-poetry.org/) is used in this repository to create the pyproject.toml file
 
 ### 2.2. Start Training
 
 To start the training process run
 
 ```shell
-python train.py
+python src/skin_cancer_detection/train.py
 ```
 
 
