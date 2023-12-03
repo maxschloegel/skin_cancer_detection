@@ -56,14 +56,11 @@ python src/skin_cancer_detection/train.py
 
 ## 3. MLFlow Tracking Server
 
-The Storage for MLFlow model tracking is defined in the training script:
-```python
-tracking_uri = 'sqlite:///mydb.sqlite'
-```
+The Storage for MLFlow model tracking is defined in the environment variable `MLFLOW_TRACKING_URI`
 
 The Tracking Server can now be started via:
 ```shell
-mlflow ui --backend-store-uri sqlite:///mydb.sqlite
+mlflow ui --backend-store-uri $MLFLOW_TRACKING_URI
 ```
 
 In the UI you can look at the different training runs and register models to the model registry.
