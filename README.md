@@ -131,9 +131,9 @@ The following features and additionas will come soon. For each:
   - [x] Create CI with github-actions (pytest and flake8)
   - [x] Initialize Code as Python Package
   - [ ] Write actual tests
-- [ ] Use [DVC](https://dvc.org/) for data version control of training data
-  - [ ] First set it up locally
-  - [ ] Make it flexible enough to be switch to AWS S3 later on
+- [x] Use [DVC](https://dvc.org/) for data version control of training data
+  - [x] First set it up locally
+  - [x] Make it flexible enough to be switch to AWS S3 later on
 - [ ] Set up CT (continuous training)
   - [ ] Create github runner with GPU (firts locally then later with AWS using [`CML`](https://cml.dev/))
   - [ ] Add training to github-actions
@@ -145,5 +145,4 @@ The following features and additionas will come soon. For each:
   - [x] Deploy local FastAPI using local mlflow model registry
   - [ ] Deploy FastApi-app via AWS
 - [ ] Use [`Evidently`](https://www.evidentlyai.com/) for performance tracking
-- [ ] Set up cost monitoring of AWS instances
-- [ ] Understand `checkpoint`-directory
+- [x] Set up cost monitoring of AWS instances
