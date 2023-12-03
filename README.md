@@ -8,8 +8,11 @@ This repository contains the code to train a Neural Network to differentiate bet
 1. Dataset
 2. Training
 3. MLflow Tracking Server
+4. FastAPI
+5. Self-hosted Github Runner
+6. Coming Soon
 
-## Dataset
+## 1. Dataset
 
 The dataset used for this project is the HAM10000 dataset.
 It contains 10000 labeled images of skin lesions with 7 different classes. 
@@ -18,13 +21,13 @@ For more information and downloading the dataset see the [HAM10000-Dataset](http
 > Tschandl, P. (2018). The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions [dataset]. Harvard Dataverse. https://doi.org/10.7910/DVN/DBW86T 
 
 
-## Training
+## 2. Training
 
 For training you first need to set up the virtual environment and then start the training process.
 At the current stage training will automatically create an sqlite-DB in this project's root directory which will store all models and metrics.
 If at a later stage you want to have an online storeg (e.g. Amazon S3 instance) more instructions will follow soon.
 
-### 1. Set up the Virtual Environment
+### 2.1. Set up the Virtual Environment
 
 To set up the virtual environment use your favourite tool. In my case, I use python `virtualenv` to set it up.
 First create it and then activate it, so we can intall the dependencies afterwards.
@@ -42,7 +45,7 @@ pip install -r requirements.txt
 ```
 
 
-### 2. Start Training
+### 2.2. Start Training
 
 To start the training process run
 
@@ -51,7 +54,7 @@ python train.py
 ```
 
 
-## MLFlow Tracking Server
+## 3. MLFlow Tracking Server
 
 The Storage for MLFlow model tracking is defined in the training script:
 ```python
@@ -65,11 +68,11 @@ mlflow ui --backend-store-uri sqlite:///mydb.sqlite
 
 In the UI you can look at the different training runs and register models to the model registry.
 
-### Setting up MLflow Tracking Server online
+### 3.1. Setting up MLflow Tracking Server online
 
 Here we will describe in detail how to set up an online MLflow Tracking Server and connect it to an online available model registry.
 
-## FastAPI
+## 4. FastAPI
 
 In the end the model will be deployed via FastAPI (see [`src/app/main.py`](https://github.com/maxschloegel/skin_cancer_detection/blob/main/src/app/main.py))
 To run the app you need to have `uvicorn` installed and run:
@@ -80,7 +83,7 @@ uvicorn src.app.main:app --reload
 You can set the specific port by adding the argument `--port 8001`, see [uvicorn's website](https://www.uvicorn.org/settings/) for more information.
 
 
-## Running Self-Hosted Runner
+## 5. Self-Hosted Github-Runner
 
 CML allows you to run your own github-runner, i.e. if you need GPUs for computations but don't have access to AWS et al.
 On their [website](https://cml.dev/doc/self-hosted-runners) they explain in detail how to set that up. In short, you can use their docker image with every necessary package pre-installed `docker://iterativeai/cml:0-dvc2-base1-gpu`.
@@ -120,7 +123,7 @@ Here:
 - `REPOSITORY_URL` is the url of the repository you need the GPU-runner for
 - `PERSONAL_ACCESS_TOKEN` is the PAT for that repository which allows you to create the runner
 
-## Coming Soon
+## 6. Coming Soon
 
 The following features and additionas will come soon. For each:
 - Keep README up to date for each of the To-Dos
