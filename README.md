@@ -56,12 +56,15 @@ python src/skin_cancer_detection/train.py
 
 ## 3. MLFlow Tracking Server
 
-The Storage for MLFlow model tracking is defined in the environment variable `MLFLOW_TRACKING_URI`
+The Storage for MLFlow model tracking is defined in the environment variable `MLFLOW_TRACKING_URI`. In this repository we make use of [`dotenv`](https://github.com/theskumar/python-dotenv) to use environment variables.
 
-The Tracking Server can now be started via:
+The Tracking Server can now be started via the following command [found here](https://mlflow.org/docs/latest/tracking.html#scenario-4-mlflow-with-remote-tracking-server-backend-and-artifact-stores):
 ```shell
-mlflow ui --backend-store-uri $MLFLOW_TRACKING_URI
+mlflow server --backend-store-uri $MLFLOW_TRACKING_URI --default-artifact-root s3://<S3-bucket> --no-serve-artifacts
 ```
+There are a few important things to consider when using a S3-bucket:
+- To define the `artifact_location` in the MLflow-logger, you need to create a new experiment in the training-scripts and define the artifact-location during instantiation of the experiment.
+- AFAIK MLflow does not allow the change of the `artifact_location` after the experiment has been created.
 
 In the UI you can look at the different training runs and register models to the model registry.
 
