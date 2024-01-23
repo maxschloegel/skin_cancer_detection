@@ -138,12 +138,12 @@ The following features and additionas will come soon. For each:
 - [x] Use [DVC](https://dvc.org/) for data version control of training data
   - [x] First set it up locally
   - [x] Make it flexible enough to be switch to AWS S3 later on
-- [ ] Set up CT (continuous training)
-  - [ ] Create github runner with GPU (firts locally then later with AWS using [`CML`](https://cml.dev/))
-  - [ ] Add training to github-actions
+- [X] Set up CT (continuous training)
+  - [X] Create github runner with GPU (first locally then later with AWS using [`CML`](https://cml.dev/))
+  - [X] Add training to github-actions
 - [ ] Refactor training script:
-  - [ ] Create own model.py-file for lightning model
-  - [ ] Outsource all configs to external config-file
+  - [X] Create own model.py-file for lightning model
+  - [X] Outsource all configs to external config-file
 - [ ] Deploy MLflow tracking server via AWS
 - [x] Deploy model with RestAPI endpoint via AWS
   - [x] Deploy local FastAPI using local mlflow model registry
